@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # 初始化参数
 max_car_num = 20  # 最大出租车个数
 max_move_num = 5  # 最大移动车的数量

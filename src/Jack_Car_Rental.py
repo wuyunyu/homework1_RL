@@ -7,7 +7,8 @@ actions = np.arange(-max_move_num, max_move_num + 1)  # 动作空间
 value = np.zeros((max_car_num + 1, max_car_num + 1))  # 价值函数
 policy = np.zeros(value.shape, dtype=int) # 策略
 init_trans_prob()  # 初始化状态转移概率矩阵
-# 策略迭代方法
+
+# policy iteration
 def policy_iteration():
     iteration = 0
     while True:
@@ -46,6 +47,8 @@ def policy_iteration():
         draw_fig(value, policy, iteration)
         if policy_stable:
             break
+
+# value iteration
 def value_iteration():
     iteration = 0
     while True:
@@ -76,5 +79,6 @@ def value_iteration():
         iteration += 1
         print('iteration: {}, delta: {}'.format(iteration, delta))
         draw_fig(value, policy, iteration)
-policy_iteration()
-# value_iteration()
+
+# policy_iteration()
+value_iteration()
