@@ -12,10 +12,9 @@ init_trans_prob()  # 初始化状态转移概率矩阵
 def policy_iteration():
     iteration = 0
     while True:
-    # 进行策略评估
+    # policy evaluattion
         while True:
             old_value = value.copy()
-            # 遍历所有状态
             for i in range(max_car_num + 1):
                 for j in range(max_car_num + 1):
                     new_state_value = value_update([i, j], policy[i, j], value)
@@ -24,27 +23,26 @@ def policy_iteration():
             # print(f'max value change: {max_value_change}')
             if max_value_change < 1e-4:
                 break
-        # 策略改进
+        # policy improvement
         policy_stable = True
         for i in range(max_car_num + 1):
             for j in range(max_car_num + 1):
                 old_action = policy[i, j]
                 action_value = []
-                # 遍历动作空间
                 for action in actions:
                     if -j <= action <= i:  # valid action
                         action_value.append(value_update([i, j], action, value))
                     else:
                         action_value.append(-np.inf)
                 action_value = np.array(action_value)
-                # 贪婪选择，选择价值函数最大的动作
+                # greedy policy
                 new_action = actions[np.where(action_value == action_value.max())[0]]
                 policy[i, j] = np.random.choice(new_action)
                 if policy_stable and (old_action not in new_action):
                     policy_stable = False
         iteration += 1
         print('iteration: {}, policy stable {}'.format(iteration, policy_stable))
-        draw_fig(value, policy, iteration)
+        draw_fig(value, policy, iteration, 0)
         if policy_stable:
             break
 
@@ -53,32 +51,29 @@ def value_iteration():
     iteration = 0
     while True:
         delta = 0
-        policy_stable = True
-        # 遍历所有状态
         for i in range(max_car_num + 1):
             for j in range(max_car_num + 1):
-                old_action = policy[i, j]
                 old_value = value[i, j]
                 action_value = []
-                # 遍历动作空间
                 for action in actions:
                     if -j <= action <= i:  # valid action
                         action_value.append(value_update([i, j], action, value))
                     else:
                         action_value.append(-np.inf)
                 action_value = np.array(action_value)
+                # greedy policy
+                # policy update
                 new_action = actions[np.where(action_value == action_value.max())[0]]
                 policy[i, j] = np.random.choice(new_action)
-                if policy_stable and (old_action not in new_action):
-                    policy_stable = False
+                # value update
                 new_value = action_value.max()
                 value[i, j] = new_value
                 delta = max(delta, abs(old_value - new_value))
-        if policy_stable == True and delta < 0.1:
-            break
         iteration += 1
         print('iteration: {}, delta: {}'.format(iteration, delta))
-        draw_fig(value, policy, iteration)
+        draw_fig(value, policy, iteration, 1)
+        if delta < 0.1:
+            break
 
-# policy_iteration()
-value_iteration()
+policy_iteration()
+# value_iteration()

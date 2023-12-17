@@ -5,5 +5,5 @@ rent_income = 10  # 租车收益
 request_mean = [3, 4]  # 租赁点租车请求期望
 return_mean = [3, 2]  # 租赁点还车期望
 discount = 0.9  # 折扣率
-move_cost = 2  # 移动车的代价
+move_cost = 2  # 移车代价
 accurate = 1e-6  # 泊松分布停止条件
