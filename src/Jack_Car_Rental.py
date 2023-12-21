@@ -20,7 +20,7 @@ def policy_iteration():
                     new_state_value = value_update([i, j], policy[i, j], value)
                     value[i, j] = new_state_value
             max_value_change = abs(old_value - value).max()
-            # print(f'max value change: {max_value_change}')
+            print(f'max value change: {max_value_change}')
             if max_value_change < 1e-4:
                 break
         # policy improvement

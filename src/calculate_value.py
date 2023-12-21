@@ -21,15 +21,15 @@ def trans_prob(s, loc):
     :param loc: 租赁点位置 0:第一个租赁点 1:第二个租赁点
     :return: None
     """
-    for ren in range(0, max_car_num + 1):  # 当天租出去的车数量，可以取到正无穷，但指数衰减取到MAX_CAR_GARAGE足够保证精度
+    for ren in range(0, max_car_num + 1):  # 当天租出去的车数量ren
         p_rent = poisson(ren, request_mean[loc])  # 租出去r辆车的概率
-        if p_rent < accurate:  # 精度限制
+        if p_rent < accurate:  
             return
         rent_num = min(s, ren)  # 租车数不可能大于库存数
         reward[loc, s] += p_rent * rent_income * rent_num  # 租车收益
         for ret in range(0, max_car_num + 1):  # 当天还车数量ret
             p_ret = poisson(ret, return_mean[loc])  # 还ret辆车的概率
-            if p_ret < accurate:  # 精度限制
+            if p_ret < accurate:  
                 continue
             s_next = min(s - rent_num + ret, max_car_num)  # 下一步状态：租车+还车后的租车点汽车数量
             Tp[loc, s, s_next] += p_rent * p_ret  # 状态转移概率
@@ -47,7 +47,7 @@ def init_trans_prob():
 def value_update(state, action, last_value):
     """
     更新当前状态的价值函数
-    :param state: [i,j] i代表第一个租赁点的汽车数量，j代表第二个租赁点的汽车数量
+    :param state: [i,j] i代表第一个租赁点的汽车数量,j代表第二个租赁点的汽车数量
     :param action: 动作
     :param last_value: 上一个价值函数,为value数组引用
     :return: 当前状态的价值函数
